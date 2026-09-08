@@ -107,6 +107,7 @@ All contributors (including maintainers) should update `CHANGELOG.md` when creat
 - **Player**: The track list sidebar now renders inline inside the player panel (via
   `TrackListSidebar layout="inline"`) instead of as a separate overlay panel, and the player
   was widened to accommodate it.
+- **Dependency maintenance**: Bumped `@behindthemusictree/app-kit` to `4.9.0` (from `4.7.0`).
 - **Dependency maintenance**: Bumped `@behindthemusictree/app-kit` to `4.7.0` (from `4.6.0`).
 - **Dependency maintenance**: Bumped `@behindthemusictree/app-kit` to `4.6.0` (from `4.5.3`).
 - **Dependency maintenance**: Bumped `@behindthemusictree/app-kit` to `4.5.3` (from `4.5.2`) —
