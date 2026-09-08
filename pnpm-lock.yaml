@@ -22,8 +22,8 @@ importers:
         specifier: 4.9.0
         version: 4.9.0(@tanstack/react-query@5.72.2(react@19.1.0))(next@16.2.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@behindthemusictree/brand':
-        specifier: 11.6.0
-        version: 11.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 12.0.0
+        version: 12.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@behindthemusictree/ui':
         specifier: 0.1.0
         version: 0.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -315,12 +315,6 @@ packages:
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
       next: '>=14.0.0'
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
-
-  '@behindthemusictree/brand@11.6.0':
-    resolution: {integrity: sha512-2IgqqrfLRtxBH54HNk6BG4AYbZV1gxeOVdI66lVuYI6hUJRiS++mo3HFb+lwhS9XW5+an/XI7TBjj6UgsRjJ+Q==, tarball: https://npm.pkg.github.com/download/@behindthemusictree/brand/11.6.0/e11906fcf8895a2eedad085887bc7b08b5767ae5}
-    peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
@@ -4447,11 +4441,6 @@ snapshots:
       tailwind-merge: 3.2.0
       uuid: 10.0.0
       zod: 3.24.3
-
-  '@behindthemusictree/brand@11.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
 
   '@behindthemusictree/brand@12.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
