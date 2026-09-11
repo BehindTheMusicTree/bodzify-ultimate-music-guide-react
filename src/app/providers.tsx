@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode, useCallback } from "react";
-import { usePathname } from "next/navigation";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient, useFetchWrapper, ConnectivityErrorProvider, Scope } from "@behindthemusictree/app-kit/transport";
 import { SessionProvider } from "@behindthemusictree/app-kit/auth";
@@ -15,8 +14,7 @@ import {
   YoutubeTrackDetailed,
   YoutubeTrackDetailedSchema,
 } from "@behindthemusictree/app-kit/genre-tree";
-import { getGrowBackendBaseUrl, getGrowPrototypeBackendBaseUrl } from "@lib/site-urls";
-import { isPrototypeRoute } from "@lib/prototype-mode";
+import { getGrowBackendBaseUrl } from "@lib/site-urls";
 import { toPlayerTrack } from "@lib/player-track";
 
 interface ProvidersProps {
@@ -47,16 +45,14 @@ function useLoadTrack(getBackendBaseUrl: () => string): (trackId: string) => Pro
 }
 
 function AppProviders({ children }: ProvidersProps) {
-  const pathname = usePathname();
-  const getBackendBaseUrl = isPrototypeRoute(pathname) ? getGrowPrototypeBackendBaseUrl : getGrowBackendBaseUrl;
-  const loadTrack = useLoadTrack(getBackendBaseUrl);
+  const loadTrack = useLoadTrack(getGrowBackendBaseUrl);
 
   return (
     <PlayerProvider loadTrack={loadTrack}>
       <PopupProvider>
         <TrackListSidebarVisibilityProvider>
           <TrackListProvider
-            getBackendBaseUrl={getBackendBaseUrl}
+            getBackendBaseUrl={getGrowBackendBaseUrl}
             schema={YoutubeTrackDetailedSchema}
             listEndpoint={() => libraryEndpoints[PLAYER_SCOPE].youtube.list()}
             listQueryKey={(page) => libraryQueryKeys[PLAYER_SCOPE].youtube.list(page)}

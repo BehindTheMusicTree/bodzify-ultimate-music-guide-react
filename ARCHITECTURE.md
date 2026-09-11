@@ -16,8 +16,7 @@ src/app/
 ├── AppContent.tsx            # Client component: header, player footer, sidebar, prototype banner
 ├── health/route.ts           # GET /health — { status: "ok" }, used by Coolify's healthcheck
 ├── api/
-│   ├── grow-proxy/[...path]/route.ts             # Server-only proxy to grow-the-music-tree-api
-│   └── grow-prototype-proxy/[...path]/route.ts   # Same, against the prototype identity
+│   └── grow-proxy/[...path]/route.ts             # Server-only proxy to grow-the-music-tree-api
 └── (app)/                    # Route group: everything wrapped in Providers + AppContent
     ├── layout.tsx
     ├── about/page.tsx
@@ -52,39 +51,32 @@ there's no login UI, no `useSpotifyAuth`/`useGoogleAuth`, and `AppContent.tsx` p
 
 ## Talking to `grow-the-music-tree-api`
 
-The backend requires an `X-API-Key` header (`grow-the-music-tree-api`'s `GROW_API_KEY`/
-`GROW_PROTOTYPE_API_KEY`). This app never puts that key in the browser — two Next.js Route
-Handlers proxy every request server-side, attaching the key there:
+The backend requires an `X-API-Key` header (`grow-the-music-tree-api`'s `GROW_API_KEY`). This app
+never puts that key in the browser — a Next.js Route Handler proxies every request server-side,
+attaching the key there:
 
 - `src/app/api/grow-proxy/[...path]/route.ts` — reads `process.env.GTMT_API_KEY` (throws if unset),
   forwards `GET`/`POST`/`PUT`/`DELETE` to `getGrowApiUpstreamBaseUrl()` (`src/lib/grow-api-upstream-url.ts`)
-  with `X-API-Key` attached, and streams the upstream response straight back.
-- `src/app/api/grow-prototype-proxy/[...path]/route.ts` — identical shape, reads
-  `process.env.GTMT_PROTOTYPE_API_KEY` instead. See [docs/prototype-mode.md](docs/prototype-mode.md).
+  with `X-API-Key` attached, and streams the upstream response straight back. Both
+  `/reference-genre-tree` and `/prototype/reference-genre-tree` go through this same proxy — see
+  [docs/prototype-mode.md](docs/prototype-mode.md).
 
-Client code never calls grow-api directly; it calls same-origin paths returned by
-`src/lib/site-urls.ts`:
-
-- `getGrowBackendBaseUrl()` → `"/api/grow-proxy"`
-- `getGrowPrototypeBackendBaseUrl()` → `"/api/grow-prototype-proxy"`
-
-`src/app/providers.tsx` picks between the two per-request based on `isPrototypeRoute(pathname)`
-(`src/lib/prototype-mode.ts`), and passes the chosen base URL into `@behindthemusictree/app-kit`'s
-`TrackListProvider` and its own `useLoadTrack` hook (used by the player).
+Client code never calls grow-api directly; it calls the same-origin path returned by
+`src/lib/site-urls.ts`'s `getGrowBackendBaseUrl()` (`"/api/grow-proxy"`).
 
 `getGrowApiUpstreamBaseUrl()` (server-only, used inside the Route Handler, not exported to client
 code) resolves the *real* upstream host — it deliberately reimplements `app-kit/transport`'s
 `buildBackendBaseUrl` logic locally rather than importing it, because that module calls
 `React.createContext` at import time and Route Handlers aren't a React runtime.
 
-Both `GTMT_API_KEY` and `GTMT_PROTOTYPE_API_KEY` are **server-only, runtime** env vars — read via
-`process.env` at request time, never `NEXT_PUBLIC_*`, never baked into the client bundle. See
-[docs/DEPLOYMENT.md §2-4](docs/DEPLOYMENT.md#2-build-time-vs-runtime-environment-variables) for the
-full build-time-vs-runtime distinction and how Coolify wires them in.
+`GTMT_API_KEY` is a **server-only, runtime** env var — read via `process.env` at request time,
+never `NEXT_PUBLIC_*`, never baked into the client bundle. See
+[docs/DEPLOYMENT.md §2-3](docs/DEPLOYMENT.md#2-build-time-vs-runtime-environment-variables) for the
+full build-time-vs-runtime distinction and how Coolify wires it in.
 
 ## Prototype/read-only mode
 
-`/prototype/*` is a second, read-only surface backed by grow-api's separate `prototype` static-key
+`/prototype/*` is a second, read-only surface — a frontend-only UI flag, not a separate backend
 identity. Full design in [docs/prototype-mode.md](docs/prototype-mode.md); the pieces that matter
 for tracing code:
 
@@ -94,8 +86,7 @@ for tracing code:
 - `src/components/features/genre-tree/GenreTreePage.tsx` is shared between
   `/reference-genre-tree` and `/prototype/reference-genre-tree`; the only difference is the
   `readOnly` prop it passes through to app-kit's `GenreTreeView`, which hides write-action UI.
-  Grow-api itself also 403s any write attempted with the prototype key
-  (`{"code": "prototype_read_only"}`) — the UI gating is a courtesy, not the enforcement boundary.
+  There is no backend-side enforcement — `readOnly` is the entire mechanism.
 
 This is unrelated to the (now-removed) provider-auth machinery — it's a static server-to-server
 key, not a user session, and it doesn't touch the app-kit `Scope` (`"reference"` vs `"me"`)

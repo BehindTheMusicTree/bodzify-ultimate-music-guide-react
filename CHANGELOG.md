@@ -100,6 +100,15 @@ All contributors (including maintainers) should update `CHANGELOG.md` when creat
 
 ### Changed
 
+- **Grow-api proxy consolidation**: `grow-the-music-tree-api` is consolidating its two backend
+  identities (`system` full-access, `prototype` read-only) into just `system`, so this frontend no
+  longer needs two proxy routes either. Removed `src/app/api/grow-prototype-proxy/[...path]/route.ts`
+  and `getGrowPrototypeBackendBaseUrl()` — `/reference-genre-tree` and
+  `/prototype/reference-genre-tree` now both go through `/api/grow-proxy` (`GTMT_API_KEY`).
+  `/prototype/*`'s read-only behavior is unchanged; it's now purely a frontend UI flag
+  (`isPrototypeRoute`/`readOnly`) with no backend identity behind it. Removed
+  `GTMT_PROTOTYPE_API_KEY` from env examples and deployment docs. See
+  [docs/prototype-mode.md](docs/prototype-mode.md).
 - **Header**: Simplified the global header — removed the hamburger dropdown menu (replaced with
   a direct About icon link), removed the "Prototype demo" nav item and the genre view mode toggle
   buttons, pointed the home link at the prototype reference genre tree route, and added a

@@ -66,14 +66,14 @@ describe("GenreTreePage", () => {
 
   it("passes readOnly={true} through for the prototype variant", async () => {
     renderGenreTreePage({
-      getBackendBaseUrl: () => "/api/grow-prototype-proxy",
+      getBackendBaseUrl: () => "/api/grow-proxy",
       title: "Prototype Genre Tree (Demo)",
       readOnly: true,
     });
 
     const view = await screen.findByTestId("genre-tree-view");
     expect(view.dataset.readonly).toBe("true");
-    expect(view).toHaveTextContent("/api/grow-prototype-proxy");
+    expect(view).toHaveTextContent("/api/grow-proxy");
     expect(screen.getByRole("heading", { name: "Prototype Genre Tree (Demo)" })).toBeInTheDocument();
   });
 
