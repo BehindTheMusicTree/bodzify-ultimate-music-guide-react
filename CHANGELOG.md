@@ -104,6 +104,18 @@ All contributors (including maintainers) should update `CHANGELOG.md` when creat
   a direct About icon link), removed the "Prototype demo" nav item and the genre view mode toggle
   buttons, pointed the home link at the prototype reference genre tree route, and added a
   TheMusicTree brand mark link to the right of the header.
+- **Header**: Moved the logo/app-name link, About icon, and TheMusicTree brand mark link into a
+  single group at the top-right of the header (previously split between top-left and top-right).
+
+### Fixed
+
+- **Genre tree default view mode**: The reference genre tree page (`/reference-genre-tree`) now
+  defaults to the "pop-core" view mode instead of "stacked", matching the prototype route.
+  `GenreTreeView`'s own fallback to "stacked" (when the loaded tree has no "Mainstream Pop" root)
+  still applies. Added tests enforcing the pop-core default on both routes.
+- **Genre tree display options**: Hid `GenreTreeView`'s "Rotation"/"Toolbar" display-options
+  toggle group (no prop exists to disable it) on the reference and prototype genre tree pages —
+  it isn't meant to be user-facing here and was rendering underneath the floating header pill.
 - **Player**: The track list sidebar now renders inline inside the player panel (via
   `TrackListSidebar layout="inline"`) instead of as a separate overlay panel, and the player
   was widened to accommodate it.

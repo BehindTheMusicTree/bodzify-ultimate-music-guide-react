@@ -133,3 +133,11 @@ button {
 [data-page="prototype-reference-genre-tree"] .page-content > * {
   margin-top: 0;
 }
+
+/* GenreTreeView (from @behindthemusictree/app-kit) always renders a "Rotation"/"Toolbar"
+   display-options group (no prop to disable it) that sits under AppHeader's floating pill.
+   Hide it since these controls aren't meant to be user-facing here. */
+[data-page="reference-genre-tree"] [aria-label="Tree display options"],
+[data-page="prototype-reference-genre-tree"] [aria-label="Tree display options"] {
+  display: none;
+}

@@ -2,8 +2,10 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { GenreTreeViewModeProvider, useGenreTreeViewMode } from "./GenreTreeViewModeProvider";
 
+let mockPathname = "/reference-genre-tree";
+
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/reference-genre-tree",
+  usePathname: () => mockPathname,
 }));
 
 function Probe() {
@@ -22,6 +24,31 @@ function Probe() {
 describe("GenreTreeViewModeProvider", () => {
   afterEach(() => {
     cleanup();
+    mockPathname = "/reference-genre-tree";
+  });
+
+  it("defaults to pop-core on the reference genre tree route", () => {
+    mockPathname = "/reference-genre-tree";
+    render(
+      <GenreTreeViewModeProvider>
+        <Probe />
+      </GenreTreeViewModeProvider>,
+    );
+
+    expect(screen.getByTestId("view-mode")).toHaveTextContent("pop-core");
+    expect(screen.getByTestId("resolved-view-mode")).toHaveTextContent("pop-core");
+  });
+
+  it("defaults to pop-core on the prototype genre tree route", () => {
+    mockPathname = "/prototype-reference-genre-tree";
+    render(
+      <GenreTreeViewModeProvider>
+        <Probe />
+      </GenreTreeViewModeProvider>,
+    );
+
+    expect(screen.getByTestId("view-mode")).toHaveTextContent("pop-core");
+    expect(screen.getByTestId("resolved-view-mode")).toHaveTextContent("pop-core");
   });
 
   it("keeps resolvedViewMode following viewMode on toggle when no override is active", () => {

@@ -38,7 +38,7 @@ export function GenreTreeViewModeProvider({ children }: { children: ReactNode })
   const mode = isPrototypeRoute(pathname) ? "prototype" : "reference";
 
   const [stateByMode, setStateByMode] = useState<Record<"reference" | "prototype", ModeState>>({
-    reference: { viewMode: "stacked", canShowPopCore: false, resolvedViewMode: "stacked" },
+    reference: { viewMode: "pop-core", canShowPopCore: false, resolvedViewMode: "pop-core" },
     prototype: { viewMode: "pop-core", canShowPopCore: false, resolvedViewMode: "pop-core" },
   });
 
