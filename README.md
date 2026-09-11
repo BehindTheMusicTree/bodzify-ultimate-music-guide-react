@@ -209,10 +209,10 @@ Every `NEXT_PUBLIC_*` var is required at build time (baked in by `next build`); 
 **Run container:**
 
 ```bash
-docker run -p 3000:3000 -e PORT=3000 -e GTMT_API_KEY=... -e GTMT_PROTOTYPE_API_KEY=... grow-the-music-tree-frontend
+docker run -p 3000:3000 -e PORT=3000 -e GTMT_API_KEY=... grow-the-music-tree-frontend
 ```
 
-`GTMT_API_KEY` and `GTMT_PROTOTYPE_API_KEY` are server-only and read at request time (not `NEXT_PUBLIC_*`), so they're runtime env vars, not build args — see [§ Grow-api write proxy](docs/DEPLOYMENT.md#grow-api-write-proxy-gtmt_api_key) and [§ Prototype/demo mode proxy](docs/DEPLOYMENT.md#4-prototypedemo-mode-proxy-gtmt_prototype_api_key) in DEPLOYMENT.md.
+`GTMT_API_KEY` is server-only and read at request time (not `NEXT_PUBLIC_*`), so it's a runtime env var, not a build arg — see [§ Grow-api write proxy](docs/DEPLOYMENT.md#grow-api-write-proxy-gtmt_api_key) in DEPLOYMENT.md.
 
 ## CI
 
@@ -263,7 +263,7 @@ For additional information about this project, please refer to:
 - **[docs/VERSIONING.md](docs/VERSIONING.md)** - Versioning strategy and guidelines
 - **[docs/SEMVER_GUIDE.md](docs/SEMVER_GUIDE.md)** - SemVer conventions used for releases
 - **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Coolify staging and production deployment setup
-- **[docs/prototype-mode.md](docs/prototype-mode.md)** - Read-only `/prototype` demo tree, `GTMT_PROTOTYPE_API_KEY` wiring
+- **[docs/prototype-mode.md](docs/prototype-mode.md)** - Read-only `/prototype` demo tree (frontend-only UI flag)
 - **[docs/REVERSE_PROXY_CONFIG.md](docs/REVERSE_PROXY_CONFIG.md)** - Nginx/reverse-proxy configuration for deployment
 - **[docs/testing.md](docs/testing.md)** - Testing strategy, tools, and conventions
 - **[docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md)** - Code and UI styling conventions

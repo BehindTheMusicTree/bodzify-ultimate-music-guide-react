@@ -1,28 +1,25 @@
 # Prototype/demo mode
 
-`/prototype/*` is a read-only demo of the reference genre tree, backed by a second static-key
-identity on `grow-the-music-tree-api` (`PROTOTYPE_USERNAME=prototype` /
-`GROW_PROTOTYPE_API_KEY`), separate from the normal system-user identity.
+`/prototype/*` is a read-only **frontend-only** demo view of the reference genre tree. It hits the
+same `grow-the-music-tree-api` backend and the same same-origin proxy as the live tree — there is
+no separate backend identity behind it.
 
 ## How it's wired
 
-- `src/app/api/grow-prototype-proxy/[...path]/route.ts` mirrors `grow-proxy`'s route handler,
-  attaching the server-only `GTMT_PROTOTYPE_API_KEY` (never `NEXT_PUBLIC_*`) as `X-API-Key`
-  instead of `GTMT_API_KEY`.
-- `getGrowPrototypeBackendBaseUrl()` (`src/lib/site-urls.ts`) returns `"/api/grow-prototype-proxy"`,
-  the same-origin path pages/hooks under `/prototype/*` use instead of `getGrowBackendBaseUrl()`.
+- `src/lib/site-urls.ts`'s `getGrowBackendBaseUrl()` (`"/api/grow-proxy"`) is used by both
+  `/reference-genre-tree` and `/prototype/reference-genre-tree` — there is only one proxy
+  (`src/app/api/grow-proxy/[...path]/route.ts`) and one server-only key (`GTMT_API_KEY`).
 - `isPrototypeRoute(pathname)` (`src/lib/prototype-mode.ts`) is the single source of truth for
-  "are we in prototype mode," used by `src/app/providers.tsx` (to pick which backend base URL the
-  track player/library hit) and `AppContent.tsx` (to show `PrototypeModeBanner`).
+  "are we in prototype/demo mode," a plain `pathname?.startsWith("/prototype")`. It drives
+  UI-only concerns: showing any prototype-mode banner and picking the `readOnly` prop below.
 - `src/components/features/genre-tree/GenreTreePage.tsx` is shared by both
   `/reference-genre-tree` (`readOnly={false}`) and `/prototype/reference-genre-tree`
   (`readOnly={true}`), passing `readOnly` through to `@behindthemusictree/app-kit`'s
   `GenreTreeView`, which hides write-action UI when true.
 
-## Why this is separate from provider auth (Google/Spotify)
+## Why this is UI-only
 
-This is a static-key server-to-server auth path, not a user session. It has nothing to do with
-`scope` (`"reference"` vs `"me"`) either — prototype mode still uses `scope="reference"`, just
-against a different backend identity. The prototype key behaves identically to the system-user key
-for reads; grow-api 403s any write made with it (`{"detail": "The prototype API key is read-only",
-"code": "prototype_read_only"}`), which `GenreTreePage`'s `readOnly` prop pre-empts in the UI.
+`readOnly` is a purely client-side flag — it hides write-action UI, nothing more. It has nothing to
+do with `scope` (`"reference"` vs `"me"`) either — prototype mode still uses `scope="reference"`,
+against the same backend as the live tree. There is no backend-side enforcement of read-only-ness
+for `/prototype/*` requests; `GenreTreePage`'s `readOnly` prop is the entire mechanism.
